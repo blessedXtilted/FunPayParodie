@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль</title>
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+    <style>
+        input[type="number"] {
+            min-width: 50px;
+        }
+    </style>
+</head>
+<body class="text-bg-dark min-h-screen" style="font-family: 'Century Gothic'; background: #232323">
+
+<div th:insert="fragments/header :: header"></div>
+
+<div class="cover-container p-3 flex-column" th:object="${user}">
+    <div class="row">
+        <div class="col s12">
+            <div class="card bg-black bg-opacity-50 darken-1" style="overflow: hidden; min-height: 1%">
+                <div class="card-content white-text">
+                    <div class="col s8">
+                        <div class="flex">
+                            <div class="card h-48 w-48">
+                                <div class="card-image">
+                                    <img th:src="*{profilePhoto}" style="width: 200px; height: 180px">
+                                </div>
+                            </div>
+                            <div class="p-3 pl-0 row">
+                                <span class="flex-auto rounded-tr-lg text-3xl ml-5 font-bold order-1"
+                                      th:text="*{login}"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="row flex">
+                            <span class="card-title">Товары на продаже: </span>
+                            <a type="button"
+                               class="btn-small waves-effect waves-light text-white bg-neutral-800 hover:bg-neutral-500 hover:bg-opacity-50 focus:bg-neutral-500 focus:bg-opacity-50 focus:text-white ml-5 modal-trigger"
+                               style="word-break: keep-all"
+                               href="#goodsADD" sec:authorize="hasAuthority('SELLER')">
+                                +
+                            </a>
+                        </div>
+                        <div class="flex flex-row justify-start items-start overflow-x-auto"
+                             th:if="${not goods.isEmpty()}">
+                            <div id="item" class="mr-5 mb-3"
+                                 style="max-width: 300px; min-width: 300px; min-height: 250px !important;"
+                                 th:each="element: ${goods}">
+                                <div class="bg-gradient-to-tl from-green-400 to-indigo-800 rounded rounded-md py-1 h-full">
+                                    <div class="card darken-1 bg-black bg-opacity-40 rounded rounded-md mx-2">
+                                        <div class="card-content white-text">
+                                            <span class="card-title">Краткое описание</span>
+                                            <p class="break-words overflow-y-auto"
+                                               style="max-height: 100px !important;"
+                                               th:text="${element.goodsName}"></p>
+                                        </div>
+                                        <div class="card-action">
+                                            <a th:href="'/item/' + ${element.idGoods}"
+                                               class="waves-effect waves-green btn-small text-black bg-white rounded rounded-md focus:bg-transparent focus:text-white hover:bg-transparent hover:text-white"
+                                               style="width: 100% !important;">Посмотреть</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="goodsADD" class="modal bg-neutral-900" style="height: 100%">
+                            <div class="modal-content">
+                                <form action="/item" method="post">
+                                    <div id="input" class="col s12">
+                                        <div class="input-field">
+                                            <input class="input-input text-white" name="name" id="input-name"
+                                                   type="text" autocomplete="off" required>
+                                            <label for="input-name">Название</label>
+                                        </div>
+                                        <div class="input-field">
+                                                <textarea class="materialize-textarea text-white" name="desc"
+                                                          id="textarea-desc"
+                                                          type="text" autocomplete="off" required ></textarea>
+                                            <label for="textarea-desc">Описание</label>
+                                        </div>
+                                        <div class="input-field">
+                                                <textarea class="materialize-textarea text-white" name="details"
+                                                          id="textarea-details"
+                                                          type="text" autocomplete="off" required ></textarea>
+                                            <label for="textarea-details">Реквизиты</label>
+                                        </div>
+                                        <div class="input-field">
+                                            <input class="input-input text-white" name="sum" id="input-sum"
+                                                   type="number" autocomplete="off" value="10" min="10" max="50000"
+                                                   step=".01" required>
+                                            <label for="input-sum">Сумма</label>
+                                        </div>
+                                        <div class="input-field">
+                                            <select name="type" required>
+                                                <option value="Аккаунт" selected>Аккаунт</option>
+                                                <option value="Предмет">Предмет</option>
+                                                <option value="Прочее">Прочее</option>
+                                            </select>
+                                        </div>
+                                        <div class="modal-footer bg-neutral-900">
+                                            <button class="btn-flat waves-effect waves-light bg-neutral-900 hover:bg-neutral-700 focus:bg-neutral-900 text-white"
+                                                    type="submit">Создать
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div th:if="${goods.isEmpty()}">
+                            <div class="justify-start items-start" style="flex-direction: row;">
+                                <div class="flex">
+                                    <div class="bg-gradient-to-tl from-green-400 to-indigo-800 rounded rounded-md"
+                                         style="width: 100%">
+                                        <div class="card darken-1 bg-black bg-opacity-40 m-2">
+                                            <div class="card-content white-text text-center text-3xl">
+                                                <p>Тут пока пусто :)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <span class="card-title">Проданые товары: </span>
+                        <div id="items-scroll1" class="flex justify-start items-start overflow-x-scroll"
+                             style="flex-direction: row" th:if="${not selled.isEmpty()}">
+                            <div class="flex-content mr-5 mb-3"
+                                 style="max-width: 300px; min-width: 300px;"
+                                 th:each="element: ${selled}">
+                                <div class="bg-gradient-to-tl from-green-400 to-indigo-800 rounded rounded-md py-1">
+                                    <div class="card darken-1 bg-black bg-opacity-40 rounded rounded-md mx-2">
+                                        <div class="card-content white-text">
+                                            <span class="card-title">Краткое описание</span>
+                                            <p class="break-words overflow-y-auto"
+                                               style="max-height: 100px !important;"
+                                               th:text="${element.goods.goodsName}"></p>
+                                        </div>
+                                        <div class="card-action">
+                                            <a th:href="'/profile/' + ${element.buyer.idUser}"
+                                               th:text="'Покупатель: ' + ${element.buyer.login}"
+                                               class="hover:underline"
+                                               style="color: white"> </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${selled.isEmpty()}">
+                            <div class="justify-start items-start" style="flex-direction: row;">
+                                <div class="flex">
+                                    <div class="bg-gradient-to-tl from-green-400 to-indigo-800 rounded rounded-md"
+                                         style="width: 100%">
+                                        <div class="card darken-1 bg-black bg-opacity-40 m-2">
+                                            <div class="card-content white-text text-center text-3xl">
+                                                <p>Тут пока пусто :)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="mr-2">
+                            <figure class="highcharts-figure ">
+                                <div id="sell-container"></div>
+                            </figure>
+                        </div>
+
+                        <div class="mr-2">
+                            <figure class="highcharts-figure ">
+                                <div id="buy-container"></div>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    $('textarea[name="desc"]').keydown(function () {
+        var $this = $(this);
+
+        if ($this.val().length > 1499) {
+            $this.val($this.val().substring(0, 1499));
+        }
+    });
+
+    $('textarea[name="details"]').keydown(function () {
+        var $this = $(this);
+
+        if ($this.val().length > 499) {
+            $this.val($this.val().substring(0, 499));
+        }
+    });
+
+    Highcharts.chart('sell-container', {
+        chart: {
+            backgroundColor: '#232323',
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Продажи',
+            style: {
+                color: '#FFFFFF'
+            }
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                }
+            }
+        },
+        series: [{
+            name: 'Типы товаров',
+            colorByPoint: true,
+            data: [{
+                name: 'Аккаунт',
+                y: [[${sellAcc}]],
+                sliced: true,
+                selected: true
+            }, {
+                name: 'Предмет',
+                y: [[${sellItem}]]
+            }, {
+                name: 'Прочее',
+                y: [[${sellOther}]]
+            }]
+        }]
+    });
+
+    Highcharts.chart('buy-container', {
+        chart: {
+            backgroundColor: '#232323',
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Покупки',
+            style: {
+                color: '#FFFFFF'
+            }
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                }
+            }
+        },
+        series: [{
+            name: 'Типы товаров',
+            colorByPoint: true,
+            data: [{
+                name: 'Аккаунт',
+                y: [[${buyAcc}]],
+                sliced: true,
+                selected: true
+            }, {
+                name: 'Предмет',
+                y: [[${buyItem}]]
+            }, {
+                name: 'Прочее',
+                y: [[${buyOther}]]
+            }]
+        }]
+    });
+
+</script>
+
+</body>
+</html>

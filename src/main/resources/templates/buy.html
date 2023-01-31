@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Покупки</title>
+
+
+</head>
+
+<div th:insert="fragments/header :: header"></div>
+
+<body class="bg-neutral-900 text-bg-dark min-h-screen" style="font-family: 'Century Gothic'; background: #232323">
+<div class="cover-container p-3 flex-column">
+
+    <div class="bg-black bg-opacity-50 text-white rounded-xl">
+        <table class="table-auto">
+            <caption>
+                <div class="row">
+                    <form action="/searchBuy">
+                        <div class="input-field col s9">
+                            <input class="input-search" name="search" id="input-search" type="text"
+                                   th:value="${search}">
+                            <label for="input-search">Поиск</label>
+                        </div>
+                        <div class="input-field col s3">
+                            <div class="flex">
+                                <div class="col s9 w-full">
+                                    <select name="type" class="w-full">
+                                        <option value="">Тип товара</option>
+                                        <option value="Аккаунт" th:selected="(${type} == 'Аккаунт')">Аккаунт</option>
+                                        <option value="Предмет" th:selected="(${type} == 'Предмет')">Предмет</option>
+                                        <option value="Прочее" th:selected="(${type} == 'Прочее')">Прочее</option>
+                                    </select>
+                                </div>
+                                <button class="waves-effect waves-light text-white bg-neutral-800 hover:bg-neutral-500 hover:bg-opacity-50 focus:bg-neutral-500 focus:bg-opacity-50 focus:text-white rounded col s3"
+                                        type="submit">Поиск
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </caption>
+            <thead th:if="${not buyList.isEmpty()}">
+            <tr>
+                <th style="width: 110px">Номер покупки</th>
+                <th>Тип</th>
+                <th>Товар</th>
+                <th>Продавец</th>
+                <th style="min-width: 110px">Цена</th>
+            </tr>
+            </thead>
+
+            <tbody th:if="${not buyList.isEmpty()}">
+            <tr class="opacity-50 hover:opacity-100 cursor-pointer" th:each="buy: ${buyList}">
+                <td><a class="font-bold block" style="word-break: break-all"
+                       th:href="'buy/item/' + ${buy.getGoods().getIdGoods()}"
+                       th:text="${buy.getGoods().getIdGoods()}"></a></td>
+
+                <td><a class="font-bold block"
+                       th:href="'buy/item/' + ${buy.getGoods().getIdGoods()}"
+                       th:text="${buy.getGoods().getType().getTypeName()}"></a></td>
+
+                <td><a class="block" style="word-break: break-all"
+                       th:href="'buy/item/' + ${buy.getGoods().getIdGoods()}"
+                       th:text="${buy.getGoods().getGoodsName()}"></a></td>
+
+                <td><a class="hover:underline block" style="word-break: break-all"
+                       th:text="${buy.getGoods().getSeller().getLogin()}"
+                       th:href="'profile/' +${buy.getGoods().getSeller().getIdUser()}"></a></td>
+
+                <td><a class="block" style="word-break: break-all"
+                       th:href="'buy/item/' + ${buy.getGoods().getIdGoods()}"
+                       th:text="${buy.getGoods().getGoodsCost()} + '₽'"></a></td>
+            </tr>
+            </tbody>
+
+            <tbody th:if="${buyList.isEmpty()}">
+            <tr>
+                <td colspan="4" class="text-center font-bold text-3xl">Ничего не найдено!</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('select');
+        M.FormSelect.init(elems);
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная</title>
+</head>
+
+<div th:insert="fragments/header :: header"></div>
+
+<body class="bg-neutral-900 text-bg-dark min-h-screen" style="font-family: 'Century Gothic'; background: #232323">
+<div class="cover-container p-3 flex-column">
+
+    <div class="bg-black bg-opacity-50 text-white rounded-xl">
+        <table class="table-auto">
+            <caption>
+                <div class="row">
+                    <form action="/search">
+                        <div class="input-field col s9">
+                            <input class="input-search" name="search" id="input-search" type="text"
+                                   th:value="${search}">
+                            <label for="input-search">Поиск</label>
+                        </div>
+                        <div class="input-field col s3">
+                            <div class="flex">
+                                <div class="col s9 w-full">
+                                    <select name="type" class="w-full">
+                                        <option value="">Тип товара</option>
+                                        <option value="Аккаунт" th:selected="(${type} == 'Аккаунт')">Аккаунт</option>
+                                        <option value="Предмет" th:selected="(${type} == 'Предмет')">Предмет</option>
+                                        <option value="Прочее" th:selected="(${type} == 'Прочее')">Прочее</option>
+                                    </select>
+                                </div>
+                                <button class="waves-effect waves-light text-white bg-neutral-800 hover:bg-neutral-500 hover:bg-opacity-50 focus:bg-neutral-500 focus:bg-opacity-50 focus:text-white rounded col s3"
+                                        type="submit">Поиск
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </caption>
+            <thead th:if="${not goodsList.isEmpty()}">
+            <tr>
+                <th>Тип</th>
+                <th>Описание</th>
+                <th>Продавец</th>
+                <th style="min-width: 110px">Цена</th>
+            </tr>
+            </thead>
+
+            <tbody th:if="${not goodsList.isEmpty()}">
+            <tr class="opacity-50 hover:opacity-100 cursor-pointer" th:each="goods: ${goodsList}">
+                <td><a class="font-bold block"
+                       th:href="'item/' + ${goods.getIdGoods()}"
+                       th:text="${goods.getType().getTypeName()}"></a></td>
+
+                <td><a class="block" style="word-break: break-all"
+                       th:href="'item/' + ${goods.getIdGoods()}"
+                       th:text="${goods.getGoodsName()}"></a></td>
+
+                <td><a class="hover:underline block" style="word-break: break-all"
+                       th:text="${goods.getSeller().getLogin()}"
+                       th:href="'profile/' +${goods.getSeller().getIdUser()}"></a></td>
+
+                <td><a class="block" style="word-break: break-all"
+                       th:href="'buy/item/' + ${goods.getIdGoods()}"
+                       th:text="${goods.getGoodsCost()} + '₽'"></a></td>
+            </tr>
+            </tbody>
+
+            <tbody th:if="${goodsList.isEmpty()}">
+            <tr>
+                <td colspan="4" class="text-center font-bold text-3xl">Ничего не найдено!</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

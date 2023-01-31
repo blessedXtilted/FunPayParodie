@@ -1,0 +1,212 @@
+<div th:fragment="header" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="/css/materialize/css/materialize.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/own.css" rel="stylesheet">
+
+    <header style="font-family: 'Century Gothic';">
+
+        <div class="p-3 border-gray-200 px-6 py-2.5" style="background: #040204">
+            <div class="flex flex-wrap justify-between items-center mx-auto">
+                <a href="/" class="flex items-center">
+                    <img src="https://i.imgur.com/ILxHPXF.png" class="mr-5" style="width: 50px; height: 50px"
+                         alt="logo"/>
+                    <span id="sys-name" class="self-center text-3xl font-bold whitespace-nowrap text-neutral-600">OES</span>
+                </a>
+
+                <div class="justify-between items-center flex-auto w-auto mx-16">
+                    <ul class="flex font-medium flex-row space-x-8 order-1">
+                        <li>
+                            <a href="/" class="block px-2 text-gray-400 hover:text-white">Главная</a>
+                        </li>
+                        <li sec:authorize="isAuthenticated()">
+                            <a href="/support" class="block px-2 text-gray-400 hover:text-white">Поддержка</a>
+                        </li>
+                        <li sec:authorize="isAuthenticated()">
+                            <a href="/rights" class="block px-2 text-gray-400 hover:text-white">Повышение прав</a>
+                        </li>
+                        <li sec:authorize="hasAnyAuthority('ADMIN','MODERATOR')">
+                            <a href="/requests" class="block px-2 text-gray-400 hover:text-white">Заявки</a>
+                        </li>
+                        <li sec:authorize="hasAuthority('ADMIN')">
+                            <a href="/users" class="block px-2 text-gray-400 hover:text-white">Пользователи</a>
+                        </li>
+                        <li sec:authorize="hasAuthority('ADMIN')">
+                            <a id="backup" class="block px-2 text-red-600 hover:text-white cursor-pointer">Резервное копирование БД</a>
+                        </li>
+                        <li sec:authorize="hasAuthority('ADMIN')">
+                            <a id="restore" class="block px-2 text-red-600 hover:text-white cursor-pointer">Восстановление БД</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="flex items-center order-2">
+                    <div sec:authorize="isAuthenticated()">
+
+                        <a id="userN"
+                           class="dropdown-trigger btn-large bg-transparent hover:bg-neutral-700 hover:bg-opacity-50 font-bold"
+                           data-target='dropdown1'></a>
+
+                        <ul id='dropdown1' class='dropdown-content'>
+                            <li><a class="waves-effect waves-light bg-neutral-900 hover:bg-neutral-700 focus:bg-neutral-900"
+                                   style="color: white !important; font-size: 0.9rem !important;"
+                                   href="/profile">Профиль</a></li>
+                            <li><a class="waves-effect waves-light bg-neutral-900 hover:bg-neutral-700 focus:bg-neutral-900"
+                                   style="color: white !important; font-size: 0.9rem !important;"
+                                   href="/profileEDT">Настройки профиля</a></li>
+                            <li><a class="waves-effect waves-light bg-neutral-900 hover:bg-neutral-700 focus:bg-neutral-900"
+                                   style="color: white !important; font-size: 0.9rem !important;"
+                                   href="/buy">Мои покупки</a></li>
+                            <li><a class="waves-effect waves-light bg-neutral-900 hover:bg-neutral-700 focus:bg-neutral-900"
+                                   style="color: white !important; font-size: 0.9rem !important;"
+                                   href="/requests" >Мои заявки</a></li>
+
+                            <li class="divider bg-neutral-800" tabindex="-1"></li>
+
+                            <li><a class="waves-effect waves-light modal-trigger bg-neutral-900 hover:bg-neutral-700 focus:bg-neutral-900 focus:text-black"
+                                   style="color: white !important; font-size: 0.9rem !important;"
+                                   id="userB" href="#balance">Баланс: </a></li>
+
+                            <li class="divider bg-neutral-800" tabindex="-1"></li>
+
+                            <li style="height: 1% !important;">
+                                <form action="/logout" method="post" class="h-full">
+                                    <button type="submit"
+                                       class="waves-effect waves-light bg-neutral-900 hover:bg-neutral-700 focus:bg-neutral-900 w-full h-full text-start"
+                                       style="color: white !important; font-size: 0.9rem !important; padding-left: 1.15rem">Выйти</button>
+                                </form>
+                            </li>
+                        </ul>
+
+                        <img id="userI" class="right mr-5 rounded-sm" src="https://i.imgur.com/ILxHPXF.png"
+                             style="width: 54px; height: 54px" alt="icon"/>
+
+                        <div id="balance" class="modal bg-neutral-900">
+                            <div class="modal-content">
+                                <div class="col s9">
+                                    <ul class="tabs bg-neutral-900">
+                                        <li class="tab col s4"><a class="active" href="#input">Пополнение</a></li>
+                                        <li class="tab col s4"><a href="#output">Вывод</a></li>
+                                    </ul>
+                                </div>
+
+                                <form action="/thanku" method="post">
+                                    <div id="input" class="col s9">
+                                        <div class="input-field">
+                                            <input class="input-input text-white" name="sum" id="input-input"
+                                                   type="number" autocomplete="off" value="10" min="10" max="50000"
+                                                   step=".01" required>
+                                            <label for="input-input">Сумма</label>
+                                            <span class="helper-text ml-5" style="color: rgb(115 115 115)">от 10 до 50000 рублей</span>
+                                            <input class="hidden" name="method" value="in">
+                                        </div>
+                                        <div class="modal-footer bg-neutral-900">
+                                            <button class="btn-flat waves-effect waves-light bg-neutral-900 hover:bg-neutral-700 focus:bg-neutral-900 text-white"
+                                                    type="submit">Пополнить
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <form action="/thanku" method="post">
+                                    <div id="output" class="col s9">
+                                        <div class="input-field">
+                                            <input class="input-output text-white" name="sum" id="input-output"
+                                                   type="number" autocomplete="off" value="500" min="500" max="150000"
+                                                   step=".01" required>
+                                            <label for="input-output">Сумма</label>
+                                            <span class="helper-text ml-5" style="color: rgb(115 115 115)">от 500 до 150000 рублей</span>
+                                            <input class="hidden" name="method" value="out">
+                                        </div>
+                                        <div class="modal-footer bg-neutral-900">
+                                            <button id="btn-output"
+                                                    class="btn-flat waves-effect waves-light bg-neutral-900 hover:bg-neutral-700 focus:bg-neutral-900 text-white"
+                                                    type="submit">Вывести
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                    <a sec:authorize="isAnonymous()"
+                       class="waves-effect waves-light btn-small text-white bg-neutral-800 hover:bg-neutral-500 hover:bg-opacity-50 focus:bg-neutral-500 focus:bg-opacity-50 focus:text-white"
+                       href="/login">Войти</a>
+                </div>
+            </div>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="/css/materialize/js/materialize.min.js"></script>
+
+        <script>
+            $('.dropdown-trigger').dropdown();
+            $(document).ready(function(){
+                $('.tabs').tabs();
+                $('.tooltipped').tooltip();
+                $('.modal').modal();
+                $('select').formSelect();
+
+                if (parseFloat(document.getElementById('input-output').value) > parseFloat(getCookie('uB'))) {
+
+                    document.getElementById('btn-output').disabled = true;
+                } else {
+
+                    document.getElementById('btn-output').disabled = false;
+                }
+            });
+
+            var a = document.getElementById('ac');
+
+            function getCookie(c_name) {
+                if (document.cookie.length > 0) {
+                    c_start = document.cookie.indexOf(c_name + "=");
+                    if (c_start != -1) {
+                        c_start = c_start + c_name.length + 1;
+                        c_end = document.cookie.indexOf(";", c_start);
+                        if (c_end == -1) {
+                            c_end = document.cookie.length;
+                        }
+                        return unescape(document.cookie.substring(c_start, c_end));
+                    }
+                }
+                return "";
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+
+                document.getElementById('userN').innerHTML = getCookie('uN');
+                document.getElementById('userB').innerHTML = 'Баланс: ' + getCookie('uB');
+                document.getElementById('userI').src = getCookie('uP');
+            });
+
+            document.getElementById('restore').addEventListener('click', function () {
+
+                $.get('/restore', {dbName: 'kp'}, function(data){
+                    alert(data);
+                });
+            });
+
+            document.getElementById('backup').addEventListener('click', function () {
+
+                $.get('/backup', {dbName: 'kp'}, function(data){
+                    alert(data);
+                });
+            });
+
+            document.getElementById('input-output').addEventListener('input', function () {
+
+                if (parseFloat(document.getElementById('input-output').value) > parseFloat(getCookie('uB'))) {
+
+                    document.getElementById('btn-output').disabled = true;
+                } else {
+
+                    document.getElementById('btn-output').disabled = false;
+                }
+            })
+        </script>
+    </header>
+</div>

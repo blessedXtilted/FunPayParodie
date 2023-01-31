@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Поддержка</title>
+</head>
+<body class="text-bg-dark min-h-screen" style="font-family: 'Century Gothic'; background: #232323">
+
+<div th:insert="fragments/header :: header"></div>
+
+<div class="cover-container p-3 flex-column">
+    <div class="row">
+        <div class="col s12">
+            <span class="relative text-white text-xl font-bold"></span>
+            <div class="card bg-black bg-opacity-50 darken-1" style="overflow: hidden; min-height: 1%">
+                <div class="card-content white-text">
+                    <div class="row">
+                        <div class="col s12">
+                            <ul class="tabs bg-neutral-900">
+                                <li class="tab col s6"><a class="active" href="#main">Основные темы</a></li>
+                                <li class="tab col s6"><a href="#item">Поддержка по товарам</a></li>
+                            </ul>
+                        </div>
+
+                        <div id="main">
+                            <div class="col s7" style="margin-top: 1.5rem !important;">
+                                <button type="button"
+                                        class="btn rounded waves-effect waves-light text-white bg-neutral-800 hover:bg-neutral-500 hover:bg-opacity-50 focus:bg-neutral-500 focus:bg-opacity-50 focus:text-white tooltipped"
+                                        style="word-break: keep-all; width: 70%" data-position="right"
+                                        data-tooltip="На нашем сайте отсутствует функция изменения имени (логина). <br/>Однако если у вас есть веские основания для этого, пожалуйста, обратитесь в техническую поддержку.">
+                                    Изменение логина
+                                </button>
+                            </div>
+                            <div class="col s7" style="margin-top: 0.5rem !important;">
+                                <button type="button"
+                                        class="btn rounded waves-effect waves-light text-white bg-neutral-800 hover:bg-neutral-500 hover:bg-opacity-50 focus:bg-neutral-500 focus:bg-opacity-50 focus:text-white tooltipped"
+                                        style="word-break: keep-all; width: 70%" data-position="right"
+                                        data-tooltip="На данный момент светлая версия сайта отсутствует">Светлая версия
+                                    сайта
+                                </button>
+                            </div>
+                            <div class="col s7" style="margin-top: 0.5rem !important;">
+                                <button type="button"
+                                        class="btn rounded waves-effect waves-light text-white bg-neutral-800 hover:bg-neutral-500 hover:bg-opacity-50 focus:bg-neutral-500 focus:bg-opacity-50 focus:text-white tooltipped"
+                                        style="word-break: keep-all; width: 70%" data-position="right"
+                                        data-tooltip="Вы можете иметь столько аккаунтов, сколько пожелаете, однако: <br/> Если вы нарушите правила на одном аккаунте - будут заблокированы все аккаунты ">
+                                    Твинки
+                                </button>
+                            </div>
+                            <div class="col s7" style="margin-top: 0.5rem !important;">
+                                <button type="button"
+                                        class="btn rounded waves-effect waves-light text-white bg-neutral-800 hover:bg-neutral-500 hover:bg-opacity-50 focus:bg-neutral-500 focus:bg-opacity-50 focus:text-white tooltipped"
+                                        style="word-break: keep-all; width: 70%" data-position="right"
+                                        data-tooltip="Пишите нам в личные сообщения группы - vk.com/oesoffc">
+                                    Моя проблема не связана с товаром
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="item">
+                            <div class="col s12 input-field" style="margin-top: 2.5rem !important;">
+                                <form action="/support" method="post">
+                                    <div class="row">
+                                        <input required name="name" class="col s7" type="text" minlength="1"
+                                               placeholder="Название темы: [Номер заказа] Продавец, Кратко проблема">
+                                        <div class="col s5 w-full">
+                                            <select id="select-buy" name="buyId" class="w-full">
+                                                <option value="">Выберите покупку</option>
+                                                <div th:each="el: ${buys}">
+                                                    <option th:value="${el.getIdBuy()}"
+                                                            th:text="${el.getGoods().getGoodsName()}"></option>
+                                                </div>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <textarea required name="desc" class="materialize-textarea" style="min-height: 30vh"
+                                              minlength="1" type="text"
+                                              placeholder="1) Ник продавца: *текст* &#10;2) Номер заказа: *текст* &#10;3) Как с вами связаться ( ссылка на страницу VK или discord ): *текст*&#10;4) Видео (одно единственное) вашей покупки и проверки,только в онлайн просмотре на ютубе, яндексе и прочих сайтах,скачивать ваше видео на комп не кто не будет и только на весь экран, без остановок и во весь экран (без док-в жалоба не рассматривается,вы получаете отказ,исключение - признание своей вины продавцом.) &#10;5) Подробное описание проблемы: *текст*"></textarea>
+                                    <button data-target="ts-send" id="req-send" type="button"
+                                       class="btn rounded waves-effect waves-light text-white bg-neutral-800 hover:bg-neutral-500 hover:bg-opacity-50 focus:bg-neutral-500 focus:bg-opacity-50 focus:text-white modal-trigger"
+                                       disabled>
+                                        Отправить
+                                    </button>
+
+                                    <button type="button"
+                                            class="btn-small rounded waves-effect waves-light text-white bg-neutral-800 hover:bg-neutral-500 hover:bg-opacity-50 focus:bg-neutral-500 focus:bg-opacity-50 focus:text-white tooltipped"
+                                            style="word-break: keep-all" data-position="right" data-tooltip="Правила составления заявки: <br/><br/> Название темы: [Номер заказа] Продавец, Кратко проблема<br/><br/>Содержание темы: <br/><br/>
+                                                                                            1) Ник продавца: *текст* <br/>
+                                                                                            2) Номер заказа: *текст* <br/>
+                                                                                            3) Как с вами связаться ( ссылка на страницу VK или discord ): *текст* <br/>
+                                                                                            4) Видео (одно единственное) вашей покупки и проверки,только в онлайн просмотре на ютубе,<br/>яндексе и прочих сайтах,скачивать ваше видео на комп не кто не будет и только на весь экран,<br/>без остановок и во весь экран (без док-в жалоба не рассматривается,вы получаете отказ,исключение - признание своей вины продавцом.) <br/>
+                                                                                            5) Подробное описание проблемы: *текст*">
+                                        ?
+                                    </button>
+
+                                    <div id="ts-send" class="modal bg-neutral-900">
+                                        <div class="modal-content">
+                                            <span class="text-center text-white">После отправки запроса изменить его будет невозможно, продолжить?</span>
+                                        </div>
+                                        <div class="modal-footer bg-neutral-900">
+                                            <button class="modal-close btn-flat waves-effect waves-light bg-neutral-900 hover:bg-neutral-700 focus:bg-neutral-900 text-white"
+                                                    type="button">Отмена
+                                            </button>
+                                            <button class="btn-flat waves-effect waves-light bg-neutral-900 hover:bg-neutral-700 focus:bg-neutral-900 text-white"
+                                                    type="submit">Да
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var select = document.getElementById('select-buy'),
+        button = document.getElementById('req-send');
+
+    select.addEventListener('change', function () {
+
+        if (select.value === '') {
+
+            button.disabled = true;
+        } else {
+
+            button.disabled = false;
+        }
+    })
+
+    $(document).ready(function () {
+        $('select').formSelect();
+    });
+</script>
+</body>
+</html>
